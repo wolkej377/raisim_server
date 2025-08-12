@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# 创建并进入 build 目录
+cd build
+
+# 运行 cmake 配置
+cmake ..
+
+# 编译，使用 15 个核心并行编译
+if make -j15; then
+    # 编译成功后进入 src 目录并执行程序
+    cd src
+    ./mytest
+else
+    # 编译失败时输出错误信息并退出脚本
+    echo "Compilation failed. Exiting."
+    exit 1
+fi
