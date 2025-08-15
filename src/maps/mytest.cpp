@@ -85,7 +85,7 @@ public:
         ground->setAppearance("hidden");
         scenes_[3].push_back(ground);
         world_->setMaterialPairProp("sand", "steel", 0.8, 0.1, 0.001);
-        server_->setMap("wheat");
+        server_->setMap("dune");
     }
 
     // 清除当前场景
@@ -179,7 +179,8 @@ public:
         // 机器人的位置(其中z不能指定，必须查阅高度图)
         robotPosition_[0] = pos_xy[0];
         robotPosition_[1] = pos_xy[1];
-        robotPosition_[2] = getTerrainHeightAt(pos_xy[0], pos_xy[1]) + 1.0;
+        // robotPosition_[2] = getTerrainHeightAt(pos_xy[0], pos_xy[1]) + 6;
+        robotPosition_[2] = getTerrainHeightAt(pos_xy[0], pos_xy[1]);
 
         robotOrientation_ = ori;
     }
@@ -207,32 +208,32 @@ public:
     {
         // 添加一些标志物
         //  长方体x
-        auto b_x = world_->addBox(252, 0.1, 0.1, 1);
-        b_x->setPosition(raisim::Vec<3>{126, -0.1, 20});
-        b_x->setBodyType(raisim::BodyType::STATIC);
-        b_x->setAppearance("red");
-        // 长方体y
-        auto b_y = world_->addBox(0.1, 252, 0.1, 1);
-        b_y->setPosition(raisim::Vec<3>{-0.1, 126, 20});
-        b_y->setBodyType(raisim::BodyType::STATIC);
-        b_y->setAppearance("green");
-        // 长方体z
-        auto b_z = world_->addBox(0.2, 0.2, 126, 1);
-        b_z->setPosition(raisim::Vec<3>{0, 0, 83});
-        b_z->setBodyType(raisim::BodyType::STATIC);
-        b_z->setAppearance("blue");
+        // auto b_x = world_->addBox(252, 0.1, 0.1, 1);
+        // b_x->setPosition(raisim::Vec<3>{126, -0.1, 20});
+        // b_x->setBodyType(raisim::BodyType::STATIC);
+        // b_x->setAppearance("red");
+        // // 长方体y
+        // auto b_y = world_->addBox(0.1, 252, 0.1, 1);
+        // b_y->setPosition(raisim::Vec<3>{-0.1, 126, 20});
+        // b_y->setBodyType(raisim::BodyType::STATIC);
+        // b_y->setAppearance("green");
+        // // 长方体z
+        // auto b_z = world_->addBox(0.2, 0.2, 126, 1);
+        // b_z->setPosition(raisim::Vec<3>{0, 0, 83});
+        // b_z->setBodyType(raisim::BodyType::STATIC);
+        // b_z->setAppearance("blue");
 
         // 静态圆球用来找高度
-        auto sp = world_->addSphere(0.1, 0.1);
-        sp->setBodyType(raisim::BodyType::STATIC);
-        sp->setAppearance("red");
-        // double z = getTerrainHeightAt(20, 20);
-        // sp->setPosition(raisim::Vec<3>{20, 20, z});
-        sp->setPosition(robotPosition_[0], robotPosition_[1], robotPosition_[2]);
-        scenes_[currentScene_].push_back(sp);
+        // auto sp = world_->addSphere(5, 50);
+        // sp->setBodyType(raisim::BodyType::STATIC);
+        // sp->setAppearance("red");
+        // double z = getTerrainHeightAt(6, 55);
+        // sp->setPosition(raisim::Vec<3>{6, 55, z});
+        // // sp->setPosition(robotPosition_[0], robotPosition_[1], robotPosition_[2]);
+        // scenes_[currentScene_].push_back(sp);
 
         // 随机添加一些障碍物
-        int obstacleNum = 100;
+        int obstacleNum = 150;
         int obstacleInterval = 3;
         int obstacleAreaRadius = 15;
         int spaceAreaRadius = 2;
@@ -286,14 +287,14 @@ public:
             idx++;
         }
 
-        scenes_[currentScene_].push_back(b_x);
-        scenes_[currentScene_].push_back(b_y);
-        scenes_[currentScene_].push_back(b_z);
+        // scenes_[currentScene_].push_back(b_x);
+        // scenes_[currentScene_].push_back(b_y);
+        // scenes_[currentScene_].push_back(b_z);
     }
 
     double getTerrainHeightAt(float worldX, float worldY)
     {   
-        double offSet = 5.0;
+        double offSet = 0.0;
         if (currentHeightMap_)
         {
             std::cout << "At world position (" << worldX << ", " << worldY << "), the height of the terrain is:" << currentHeightMap_->getHeight(worldX, worldY) << std::endl;
@@ -407,8 +408,8 @@ int main(int argc, char *argv[])
     sceneManager.addRobot();
     // 设置机器人的初始坐标
     raisim::Vec<2> pose;
-    pose[0] = 10; // x
-    pose[1] = 10; // y
+    pose[0] = 6; // x
+    pose[1] = 55; // y
     // 设置机器人的初始朝向（四元数）
     raisim::Vec<4> quaternion;
     quaternion[0] = 0.7071; // w
@@ -451,7 +452,7 @@ int main(int argc, char *argv[])
                 ground = nullptr;
             }
             int nextScene = (sceneManager.getCurrentScene() + 1) % 4;
-            nextScene = 0; // 调试，指定某个地图
+            nextScene = 3; // 调试，指定某个地图
             sceneManager.switchToScene(nextScene);
             // 更新并设置机器人的初始位置
             // sceneManager.updateRobotState();
